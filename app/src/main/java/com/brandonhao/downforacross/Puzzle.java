@@ -2,6 +2,7 @@ package com.brandonhao.downforacross;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 public class Puzzle {
     //JSON Keys
@@ -10,16 +11,23 @@ public class Puzzle {
     private static final String CONTENTS = "contents";
     private static final String STATS = "stats";
 
+    private String jsonString;
+
     public int pid;
     public PuzzleStats stats;
     public PuzzleContents contents;
 
     public Puzzle(JSONObject jsonObject){
         try{
+            jsonString = jsonObject.toString();
             pid = jsonObject.getInt(PID);
             contents = new PuzzleContents(jsonObject.getJSONObject(CONTENTS));
             stats = new PuzzleStats(jsonObject.getJSONObject(STATS));
         }
         catch (JSONException e){}
+    }
+
+    public String toString() {
+        return jsonString;
     }
 }

@@ -1,7 +1,5 @@
 package com.brandonhao.downforacross;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -30,9 +28,9 @@ public final class RequestHandler {
 
     private URL query;
     private URLConnection httpConnection;
+    private InputStream responseStream;
     private String responseBody;
     private int responseCode;
-    private boolean responseReady;
 
     public RequestHandler(){
         try {
@@ -78,24 +76,19 @@ public final class RequestHandler {
 
             responseCode = connection.getResponseCode();
             if(responseCode != 200){
-                responseReady = false;
                 return;
             }
 
-            InputStream response = connection.getInputStream();
-            Scanner scanner = new Scanner(response);
+            responseStream = connection.getInputStream();
+            Scanner scanner = new Scanner(responseStream);
             responseBody = scanner.useDelimiter("\\A").next();
         } catch (IOException e) {
             e.printStackTrace();
-            responseReady = false;
         }
-        responseReady = true;
-        return;
     }
 
     public void getPuzzleList(int page, int pageSize, String textFilter, boolean allowMiniPuzzles, boolean allowNormalPuzzles){
-        responseReady = false;
-
+        responseCode = 0;
         this.page = Integer.toString(page);
         this.pageSize = Integer.toString(pageSize);
         this.textFilter = textFilter;
@@ -103,12 +96,10 @@ public final class RequestHandler {
         this.allowNormalPuzzles = (allowNormalPuzzles ? "true" : "false");
 
         constructQuery();
-        new Thread(() -> {
-            getResponse();
-        }).start();
+        new Thread(this::getResponse).start();
     }
 
-    public String getPuzzleListJson(){
-        return responseBody;
-    }
+    public String getPuzzleListJson(){ return responseBody; }
+
+    public InputStream getResponseStream() { return responseStream; }
 }
