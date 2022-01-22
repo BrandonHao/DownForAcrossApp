@@ -1,5 +1,7 @@
 package com.brandonhao.downforacross;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +31,9 @@ public class PuzzleClues {
                 acrossClues.add(jsonAcrossClues.getString(i));
             }
         }
-        catch(JSONException e){}
+        catch(JSONException e){
+            Log.e("PuzzleClues", e.toString());
+        }
 
     }
 }

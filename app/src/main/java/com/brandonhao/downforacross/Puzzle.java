@@ -1,5 +1,7 @@
 package com.brandonhao.downforacross;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
@@ -8,11 +10,10 @@ public class Puzzle {
     //JSON Keys
     //Top Level Keys
     private static final String PID = "pid";
-    private static final String CONTENTS = "contents";
+    private static final String CONTENTS = "content";
     private static final String STATS = "stats";
 
-    private String jsonString;
-
+    public String jsonString;
     public int pid;
     public PuzzleStats stats;
     public PuzzleContents contents;
@@ -24,7 +25,9 @@ public class Puzzle {
             contents = new PuzzleContents(jsonObject.getJSONObject(CONTENTS));
             stats = new PuzzleStats(jsonObject.getJSONObject(STATS));
         }
-        catch (JSONException e){}
+        catch (JSONException e){
+            Log.e("Puzzle", e.toString());
+        }
     }
 
     public String toString() {

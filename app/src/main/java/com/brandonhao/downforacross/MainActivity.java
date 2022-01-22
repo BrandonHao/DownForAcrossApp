@@ -1,14 +1,76 @@
 package com.brandonhao.downforacross;
 
+import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    RequestHandler restApi;
+    PuzzleList puzzles;
+
+    private void puzzleItemClickAction(View view){
+        TextView sourceView = (TextView) view;
+        Puzzle puzzle = puzzles.getPuzzle(sourceView.getText().toString());
+
+        Intent intent = new Intent(MainActivity.this, PuzzleActivity.class);
+        intent.putExtra("puzzle", puzzle.jsonString);
+        MainActivity.this.startActivity(intent);
+    }
+
+    private ArrayList<TextView> createTextViewList(){
+        ArrayList<TextView> textViews = new ArrayList<>();
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        for(Puzzle p : puzzles.getPuzzles()){
+            TextView t = new TextView(this);
+            t.setText(p.contents.info.title);
+            t.setMaxLines(1);
+            t.setMinLines(1);
+            t.setTextSize(20);
+            t.setClickable(true);
+            t.setLayoutParams(new LinearLayout.LayoutParams(layoutParams));
+            t.setOnClickListener(this::puzzleItemClickAction);
+            textViews.add(t);
+        }
+        return textViews;
+    }
+
+    public void PopulatePuzzleList(String searchFilter){
+        puzzles.clearPuzzles();
+        restApi.setQueryParams(0, 50, searchFilter, true, true);
+        Result.Success<String> result = (Result.Success<String>)restApi.getPuzzleList();
+        puzzles.addPuzzles(result.data);
+        ArrayList<TextView> textViews = createTextViewList();
+        for (TextView t : textViews) {
+            runOnUiThread(() -> {
+                final LinearLayout puzzleList = (LinearLayout) findViewById(R.id.puzzleList);
+                puzzleList.addView(t);
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        restApi = new RequestHandler();
         setContentView(R.layout.activity_main);
+        puzzles = new PuzzleList();
+
+        final ImageButton button = (ImageButton) findViewById(R.id.searchButton);
+        button.setOnClickListener(v -> {
+            final EditText textBox = (EditText) findViewById(R.id.searchFilter);
+            final String searchFilter = textBox.getText().toString();
+            final LinearLayout puzzleList = (LinearLayout) findViewById(R.id.puzzleList);
+            puzzleList.removeAllViews();
+            new Thread(()-> PopulatePuzzleList(searchFilter)).start();
+        });
     }
 }

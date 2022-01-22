@@ -1,5 +1,7 @@
 package com.brandonhao.downforacross;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,15 +25,17 @@ public class PuzzleContents {
     public boolean isPrivate;
 
     public PuzzleContents (JSONObject jsonContents){
-        shades = new ArrayList<>();
-        circles = new ArrayList<>();
+        //shades = new ArrayList<>();
+        //circles = new ArrayList<>();
 
         try{
-            grid = new PuzzleGrid(jsonContents.getJSONArray(GRID));
+            //Only populated info since the rest isn't used rn
             info = new PuzzleInfo(jsonContents.getJSONObject(INFO));
-            clues = new PuzzleClues(jsonContents.getJSONObject(CLUES));
 
-            JSONArray jsonShades = jsonContents.getJSONArray(SHADES);
+            //grid = new PuzzleGrid(jsonContents.getJSONArray(GRID));
+            //clues = new PuzzleClues(jsonContents.getJSONObject(CLUES));
+
+            /*JSONArray jsonShades = jsonContents.getJSONArray(SHADES);
             for(int i = 0; i < jsonShades.length(); i++){
                 shades.add(jsonShades.getInt(i));
             }
@@ -41,8 +45,10 @@ public class PuzzleContents {
                 circles.add(jsonCircles.getInt(i));
             }
 
-            isPrivate = jsonContents.getBoolean(IS_PRIVATE);
+            isPrivate = jsonContents.getBoolean(IS_PRIVATE);*/
         }
-        catch (JSONException e){}
+        catch (JSONException e){
+            Log.e("PuzzleContents", e.toString());
+        }
     }
 }

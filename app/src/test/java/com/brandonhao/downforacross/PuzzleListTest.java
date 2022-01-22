@@ -29,7 +29,8 @@ public class PuzzleListTest {
 
     @Test
     public void testParsePuzzleListJson(){
-        testPuzzleList = new PuzzleList(testJsonString);
+        testPuzzleList = new PuzzleList();
+        testPuzzleList.addPuzzles(testJsonString);
         assertEquals(testPuzzleList.getPuzzleCount(), 3);
         assertEquals(testPuzzleList.getPuzzle(0).pid, 18981);
     }

@@ -1,5 +1,7 @@
 package com.brandonhao.downforacross;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,8 @@ public class PuzzleStats {
         try {
             numSolves = jsonStats.getInt(NUM_SOLVES);
         }
-        catch (JSONException e){}
+        catch (JSONException e){
+            Log.e("PuzzleStats", e.toString());
+        }
     }
 }

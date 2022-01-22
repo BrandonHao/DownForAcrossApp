@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/git_repos/DownForACrossApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/git_repos/DownForACrossApp/app/src/main/res/drawable/list_divider.xml" value="0.23854166666666668" />
+        <entry key="..\:/git_repos/DownForACrossApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/git_repos/DownForACrossApp/app/src/main/res/layout/activity_puzzle.xml" value="0.22239583333333332" />
       </map>
     </option>
   </component>

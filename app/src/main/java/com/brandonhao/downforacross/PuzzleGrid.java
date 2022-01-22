@@ -1,5 +1,7 @@
 package com.brandonhao.downforacross;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,6 +18,8 @@ public class PuzzleGrid {
                 grid.add(jsonGrid.getString(i));
             }
         }
-        catch (JSONException e){}
+        catch (JSONException e){
+            Log.e("PuzzleGrid", e.toString());
+        }
     }
 }
