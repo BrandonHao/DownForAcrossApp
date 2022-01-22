@@ -1,13 +1,13 @@
 package com.brandonhao.downforacross;
 
 import android.content.Intent;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         restApi = new RequestHandler();
         setContentView(R.layout.activity_main);
         puzzles = new PuzzleList();
+        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Down For A Cross");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         final ImageButton button = (ImageButton) findViewById(R.id.searchButton);
         button.setOnClickListener(v -> {

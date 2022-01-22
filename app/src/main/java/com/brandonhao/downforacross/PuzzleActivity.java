@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.akop.ararat.core.Crossword;
 import org.akop.ararat.core.CrosswordWriter;
@@ -24,6 +25,12 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Down For A Cross");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         Intent intent = getIntent();
         String jsonString = intent.getStringExtra("puzzle");
         InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
@@ -32,13 +39,19 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
         try{
             formatter.read(builder, stream);
         }
-        catch (IOException e){
+        catch (IOException e) {
             Log.e("PuzzleActivity", e.toString());
         }
 
         Crossword crossword = builder.build();
         CrosswordView crosswordView = (CrosswordView) findViewById(R.id.crossword);
         crosswordView.setCrossword(crossword);
+        crosswordView.setOnLongPressListener(this);
+        crosswordView.setOnStateChangeListener(this);
+        crosswordView.setOnSelectionChangeListener(this);
+        crosswordView.setInputValidator(ch -> !Character.isISOControl(ch.charAt(0)));
+        crosswordView.setUndoMode(CrosswordView.UNDO_NONE);
+        crosswordView.setMarkerDisplayMode(CrosswordView.MARKER_CHEAT);
         onSelectionChanged(crosswordView, crosswordView.getSelectedWord(), crosswordView.getSelectedCell());
     }
 
