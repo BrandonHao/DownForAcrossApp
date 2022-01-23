@@ -38,7 +38,9 @@ class PuzzleFormatter : CrosswordFormatter {
 
         for(i in 0 until stringJson.length()){
             try{
-                stringList.add(stringJson.getString(i))
+                if(!stringJson.getString(i).equals("null")){
+                    stringList.add(stringJson.getString(i))
+                }
             } catch (e: JSONException){
                 Log.e("PZZL FORMAT", e.toString())
             }

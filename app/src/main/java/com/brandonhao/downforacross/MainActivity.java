@@ -2,6 +2,8 @@ package com.brandonhao.downforacross;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Down For A Cross");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.inflateMenu(R.menu.main_menu);
 
         final ImageButton button = (ImageButton) findViewById(R.id.searchButton);
         button.setOnClickListener(v -> {
@@ -77,5 +80,24 @@ public class MainActivity extends AppCompatActivity {
             puzzleList.removeAllViews();
             new Thread(()-> PopulatePuzzleList(searchFilter)).start();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_main_setting:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_main_setting"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Settings" />
+    <item
+        android:id="@+id/check_square"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Check Square" />
+    <item
+        android:id="@+id/check_word"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Check Word" />
+    <item
+        android:id="@+id/check_puzzle"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Check Puzzle" />
+    <item
+        android:id="@+id/reveal_square"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Reveal Square" />
+    <item
+        android:id="@+id/reveal_word"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Reveal Word" />
+    <item
+        android:id="@+id/reveal_puzzle"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Reveal Puzzle" />
+    <item
+        android:id="@+id/reset_puzzle"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never"
+        android:title="Reset Puzzle" />
+</menu>
