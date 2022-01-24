@@ -1,0 +1,3 @@
+[submodule "ararat"]
+	path = ararat
+	url = git@github.com:BrandonHao/ararat.git

@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Down For A Cross"
 include ':app'
+include ':library'
+project(':library').projectDir = new File(rootDir, 'ararat/library/')

@@ -1,16 +1,13 @@
 package com.brandonhao.downforacross;
 
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Scanner;
 
@@ -30,8 +27,6 @@ public final class RequestHandler{
     private String allowNormalPuzzles;
 
     private URL query;
-    private InputStream responseStream;
-    private String responseBody;
     private int responseCode;
     String queryString;
 
@@ -90,7 +85,8 @@ public final class RequestHandler{
 
     public Result<String> getPuzzleListSynchronous() throws IOException{
         constructQuery();
-        URLConnection connection = query.openConnection();
+        HttpURLConnection connection = (HttpURLConnection)query.openConnection();
+        responseCode = connection.getResponseCode();
         InputStream stream = connection.getInputStream();
         Scanner scanner = new Scanner(stream);
         String responseBody = scanner.useDelimiter("\\A").next();

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Space;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     RequestHandler restApi;
     PuzzleList puzzles;
+    FileHandler fileHandler;
 
     private void puzzleItemClickAction(View view){
         TextView sourceView = (TextView) view;
@@ -53,10 +56,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<TextView> textViews = createTextViewList();
         for (TextView t : textViews) {
             runOnUiThread(() -> {
-                final LinearLayout puzzleList = (LinearLayout) findViewById(R.id.puzzleList);
+                final LinearLayout puzzleList = findViewById(R.id.puzzleList);
                 puzzleList.addView(t);
             });
         }
+        runOnUiThread(() ->{
+            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override
@@ -65,18 +71,21 @@ public class MainActivity extends AppCompatActivity {
         restApi = new RequestHandler();
         setContentView(R.layout.activity_main);
         puzzles = new PuzzleList();
-        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        fileHandler = new FileHandler(getBaseContext());
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Down For A Cross");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.inflateMenu(R.menu.main_menu);
 
-        final ImageButton button = (ImageButton) findViewById(R.id.searchButton);
+        final ImageButton button = findViewById(R.id.searchButton);
         button.setOnClickListener(v -> {
-            final EditText textBox = (EditText) findViewById(R.id.searchFilter);
+            final EditText textBox = findViewById(R.id.searchFilter);
             final String searchFilter = textBox.getText().toString();
-            final LinearLayout puzzleList = (LinearLayout) findViewById(R.id.puzzleList);
+            final LinearLayout puzzleList = findViewById(R.id.puzzleList);
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
             puzzleList.removeAllViews();
             new Thread(()-> PopulatePuzzleList(searchFilter)).start();
         });

@@ -108,27 +108,10 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    private void checkSquare(){
-        Crossword.Word word = crosswordView.getSelectedWord();
-        String current = crosswordView.getCellContents(word, crosswordView.getSelectedCell());
-
-        if(current == null || crosswordView.isSquareMarked(word, crosswordView.getSelectedCell())){
-            return;
-        }
-
-        String actual = word.cellAt(crosswordView.getSelectedCell()).getChars();
-        if(actual.charAt(0) != current.charAt(0)){
-            crosswordView.setMarkerDisplayMode(CrosswordView.MARKER_ERROR);
-            crosswordView.toggleSquareMark(word, crosswordView.getSelectedCell(), true);
-            crosswordView.setMarkerDisplayMode(0);
-        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -138,11 +121,13 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
             case R.id.menu_main_setting:
                 return true;
             case R.id.check_square:
-                checkSquare();
+                crosswordView.checkCell(crosswordView.getSelectedWord(), crosswordView.getSelectedCell());
                 return true;
             case R.id.check_word:
+                crosswordView.checkWord(crosswordView.getSelectedWord());
                 return true;
             case R.id.check_puzzle:
+                crosswordView.checkCrossword();
                 return true;
             case R.id.reveal_square:
                 crosswordView.solveChar(crosswordView.getSelectedWord(), crosswordView.getSelectedCell());

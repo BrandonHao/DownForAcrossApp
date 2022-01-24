@@ -31,8 +31,6 @@ public class PuzzleList {
                 Log.d("Puzzle Parse", jsonPuzzle.getString("pid"));
                 puzzles.add(new Puzzle(jsonPuzzle));
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         catch (Exception e){
             Log.e("PuzzleList", e.toString());
