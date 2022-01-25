@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class RequestHandler{
     private static final String PATH = "https://api.foracross.com/api/puzzle_list";
@@ -28,9 +29,12 @@ public final class RequestHandler{
 
     private URL query;
     private int responseCode;
+
+    public AtomicBoolean threadBusy;
     String queryString;
 
     public RequestHandler(){
+        threadBusy = new AtomicBoolean(false);
         page = "0";
         pageSize = "50";
         textFilter = "";
@@ -39,6 +43,7 @@ public final class RequestHandler{
     }
 
     public RequestHandler(int page, int pageSize, String textFilter, boolean allowMiniPuzzles, boolean allowNormalPuzzles){
+        threadBusy = new AtomicBoolean(false);
         this.page = Integer.toString(page);
         this.pageSize = Integer.toString(pageSize);
         this.textFilter = textFilter;
@@ -72,6 +77,10 @@ public final class RequestHandler{
         this.textFilter = textFilter;
         this.allowMiniPuzzles = (allowMiniPuzzles ? "true" : "false");
         this.allowNormalPuzzles = (allowNormalPuzzles ? "true" : "false");
+    }
+
+    public void nextPageQuery(){
+        page = String.valueOf(Integer.parseInt(page) + 1);
     }
 
     public Result<String> getPuzzleList(){

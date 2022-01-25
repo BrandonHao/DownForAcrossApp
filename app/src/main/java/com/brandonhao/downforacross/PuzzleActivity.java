@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.akop.ararat.core.Crossword;
+import org.akop.ararat.core.CrosswordState;
 import org.akop.ararat.view.CrosswordView;
 
 import java.io.ByteArrayInputStream;
@@ -28,8 +29,9 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
     Crossword crossword;
     CrosswordView crosswordView;
     TextView hintView;
+    CrosswordStateCache cache;
 
-    private void updateHintView(){
+    private void updateHintView(){ //TODO: GSON serialize crossword to recover state
         hintView.setText(crosswordView.getSelectedWord().getHint());
     }
 
@@ -63,7 +65,7 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
         crosswordView.setOnLongPressListener(this);
         crosswordView.setOnStateChangeListener(this);
         crosswordView.setOnSelectionChangeListener(this);
-        crosswordView.setInputValidator(ch -> !Character.isISOControl(ch.charAt(0)));
+        crosswordView.setInputValidator(ch -> Character.isLetter(ch.charAt(0)));
         crosswordView.setUndoMode(CrosswordView.UNDO_NONE);
         crosswordView.setMarkerDisplayMode(CrosswordView.MARKER_CHEAT);
         crosswordView.selectWord(Crossword.Word.DIR_ACROSS, 0);
@@ -85,10 +87,16 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
         }
 
         initCrosswordView();
+
+        cache = new CrosswordStateCache(this.getApplicationContext());
+        if(cache.crosswordCacheExists(crossword.getPid())){
+            CrosswordState state = cache.readCrosswordCache(crossword.getPid());
+            crosswordView.restoreState(state);
+        }
+        new Thread(() -> cache.run()).start();
     }
 
     public void onHintClick(View view){
-        Crossword.Word word = crosswordView.getSelectedWord();
         crosswordView.switchWordDirection();
     }
 
@@ -111,6 +119,7 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        cache.stopCachingTask();
         return true;
     }
 
@@ -118,8 +127,6 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_main_setting:
-                return true;
             case R.id.check_square:
                 crosswordView.checkCell(crosswordView.getSelectedWord(), crosswordView.getSelectedCell());
                 return true;
@@ -158,13 +165,14 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
 
     @Override
     public void onCrosswordChanged(@NonNull CrosswordView crosswordView) {
-
+        cache.cacheCrossword(crosswordView.getState());
     }
 
     @Override
     public void onCrosswordSolved(@NonNull CrosswordView crosswordView) {
         Toast.makeText(this, "Puzzle Solved!",
                 Toast.LENGTH_SHORT).show();
+        cache.stopCachingTask();
     }
 
     @Override

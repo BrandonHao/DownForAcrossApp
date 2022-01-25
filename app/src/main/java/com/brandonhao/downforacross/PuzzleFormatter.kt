@@ -10,7 +10,6 @@ import org.json.JSONObject
 
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 import java.util.ArrayList
 
 
@@ -84,6 +83,8 @@ class PuzzleFormatter : CrosswordFormatter {
     @Throws(IOException::class)
     override fun read(builder: Crossword.Builder, inputStream: InputStream) {
         val inputString = inputStream.bufferedReader().use { it.readText() }
+
+        builder.setPid(JSONObject(inputString).getInt(PID_KEY))
 
         val contentsJson = JSONObject(inputString).getJSONObject(CONTENT_KEY)
         populatePuzzleInfo(builder, contentsJson.getJSONObject(INFO_KEY))
@@ -172,6 +173,7 @@ class PuzzleFormatter : CrosswordFormatter {
     companion object {
         private const val DEFAULT_ENCODING = "UTF-8"
 
+        private const val PID_KEY = "pid"
         private const val CONTENT_KEY = "content"
         private const val GRID_KEY = "grid"
         private const val INFO_KEY = "info"
