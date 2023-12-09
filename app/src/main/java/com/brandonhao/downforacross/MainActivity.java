@@ -1,8 +1,10 @@
 package com.brandonhao.downforacross;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +33,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void puzzleItemClickAction(View view){
         TextView sourceView = (TextView) view;
+
         Puzzle puzzle = puzzles.getPuzzle(sourceView.getText().toString());
 
         Intent intent = new Intent(MainActivity.this, PuzzleActivity.class);
         intent.putExtra("puzzle", puzzle.jsonString);
         MainActivity.this.startActivity(intent);
+        if(cache.crosswordCacheExists(puzzle.pid)) {
+            sourceView.setTextColor(getResources().getColor(R.color.purple_700));
+            sourceView.invalidate();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LinearLayout linearLayout = findViewById(R.id.puzzleList);
+        for(int i = 0; i < linearLayout.getChildCount(); i++){
+            TextView textView = (TextView) linearLayout.getChildAt(i);
+            if(cache.crosswordCacheExists(puzzles.getPuzzle(textView.getText().toString()).pid)){
+                textView.setTextColor(getResources().getColor(R.color.purple_700));
+                textView.invalidate();
+            }
+        }
     }
 
     private ArrayList<TextView> createTextViewList(){
@@ -118,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
             final EditText textBox = findViewById(R.id.searchFilter);
             final String searchFilter = textBox.getText().toString();
             final LinearLayout puzzleList = findViewById(R.id.puzzleList);
+            Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            vibe.vibrate(25);
 
             puzzleList.removeAllViews();
             new Thread(()-> PopulatePuzzleList(searchFilter, true)).start();

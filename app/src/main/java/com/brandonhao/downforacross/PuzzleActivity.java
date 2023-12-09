@@ -1,8 +1,10 @@
 package com.brandonhao.downforacross;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -102,6 +104,8 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
 
     public void onButtonClick(View view){
         Button button = (Button) view;
+        Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibe.vibrate(15);
         if(button.getId() == R.id.backButton){
             crosswordView.selectPreviousWord();
         }
@@ -118,8 +122,8 @@ public class PuzzleActivity extends AppCompatActivity implements CrosswordView.O
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
         cache.stopCachingTask();
+        finish();
         return true;
     }
 

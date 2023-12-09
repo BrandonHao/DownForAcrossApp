@@ -22,7 +22,6 @@ public class PuzzleList {
     }
 
     public void addPuzzles(String jsonPuzzleList){
-        puzzles = new ArrayList<>();
         try {
             JSONObject puzzleList = new JSONObject(jsonPuzzleList);
             JSONArray jsonPuzzleArray = puzzleList.getJSONArray("puzzles");
